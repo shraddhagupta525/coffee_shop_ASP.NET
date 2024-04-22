@@ -3,9 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Runtime.InteropServices;
+using System.Web;
+using System.IO;
 using System.Web.Http;
+using System.Net.Mail;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using System.Net.Http;
+using System.Web.UI.WebControls;
+using System.Web.Helpers;
 
 namespace coffee_shop.Controllers
 {
@@ -13,8 +20,9 @@ namespace coffee_shop.Controllers
     public class UsertController : ApiController
     {
         Coffee_shopEntities db = new Coffee_shopEntities();
-        [HttpPost, Route("signup")]
-        public HttpResponseMessage Signup([FromBody] User user)
+        Response response = new Response();
+        [System.Web.Http.HttpPost, System.Web.Http.Route("signup")]
+        public HttpResponseMessage Signup([System.Web.Http.FromBody] User user)
         {
             try
             {
@@ -39,8 +47,15 @@ namespace coffee_shop.Controllers
             }
         }
 
-        [HttpGet, Route("login")]
-        public HttpResponseMessage Login([FromBody] User user)
+        /*[System.Web.Http.HttpGet, System.Web.Http.Route("login")]
+        public ActionResult LoginPage()
+        {
+            return View("~/Views/Home/login.cshtml");
+        }*/
+
+
+        [System.Web.Http.HttpPost, System.Web.Http.Route("login")]
+        public HttpResponseMessage Login([System.Web.Http.FromBody] User user)
         {
             try
             {
@@ -68,13 +83,14 @@ namespace coffee_shop.Controllers
         }
 
 
-        [HttpGet,Route("checkToken")]
+        [System.Web.Http.HttpGet, System.Web.Http.Route("checkToken")]
         [CustomAuthenticationFilter]
         public HttpResponseMessage CheckToken()
         {
             return Request.CreateResponse(HttpStatusCode.OK, new { message = "true" });
         }
-        [HttpGet, Route("getAllUser")]
+
+        [System.Web.Http.HttpGet, System.Web.Http.Route("getAllUser")]
         [CustomAuthenticationFilter]
         public HttpResponseMessage GetAllUser()
         {
@@ -97,6 +113,108 @@ namespace coffee_shop.Controllers
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, e);
             }
+        }
+
+        [System.Web.Http.HttpPost, System.Web.Http.Route("updateUserStatus")]
+        [CustomAuthenticationFilter]
+        public HttpResponseMessage UpdateUserStatus(User user)
+        {
+            try
+            {
+                var token = Request.Headers.GetValues("authorization").First();
+                TokenClaim tokenClaim = TokenManager.ValidateToken(token);
+                if(tokenClaim.Role != "admin")
+                {
+                    return Request.CreateResponse(HttpStatusCode.Unauthorized);
+                }
+                User userObj = db.Users.Find(user.id);
+                if(userObj == null)
+                {
+                    response.message = "User id does not found";
+                    return Request.CreateResponse(HttpStatusCode.OK, response);
+                }
+                userObj.status = user.status;
+                db.Entry(userObj).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+                response.message = "User status updated successfully";
+                return Request.CreateResponse(HttpStatusCode.OK, response);
+            }catch(Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
+
+        [System.Web.Http.HttpPost, System.Web.Http.Route("changePassword")]
+        [CustomAuthenticationFilter]
+        public HttpResponseMessage ChangePassword(Models.ChangePassword changepassword)
+        {
+            try
+            {
+                var token = Request.Headers.GetValues("authentication").First();
+                TokenClaim tokenClaim = TokenManager.ValidateToken(token);
+
+                User userObj = (User)db.Users
+                    .Where(u => u.email == tokenClaim.Email && u.password == changepassword.OldPassword);
+                if(userObj != null)
+                {
+                    userObj.password = changepassword.NewPassword;
+                    db.Entry(userObj).State = System.Data.Entity.EntityState.Modified;
+                    db.SaveChanges();
+                    response.message = "Password updated successfully";
+                    return Request.CreateResponse(HttpStatusCode.OK, response);
+                }
+                else
+                {
+                    response.message = "Incorrect Old Password";
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, response);                    
+                }
+            }catch(Exception e)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e);
+            }
+        }
+
+        private string createEmailBody(string email, string password)
+        {
+            try
+            {
+                string body = string.Empty;
+                using (StreamReader reader = new StreamReader(HttpContext.Current.Server.MapPath("/Template/forgot-password.html")))
+                {
+                    body = reader.ReadToEnd();
+                }
+                body.Replace("{email}", email);
+                body.Replace("{password}", password);
+                body.Replace("{frontendUrl}", "https://localhost:4200/");
+                return body;
+            }catch(Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
+        [System.Web.Http.HttpPost, System.Web.Http.Route("forgotPassword")]
+        public async Task<HttpResponseMessage> ForgotPassword([System.Web.Http.FromBody] User user)
+        {
+            User userObj= db.Users.Where(u=> u.email==user.email).FirstOrDefault();
+            response.message = "Password sent successfully to your email";
+            if(userObj == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, response);
+            }
+            var message = new MailMessage();
+            message.To.Add(new MailAddress(user.email));
+            message.Subject = "Password by CoffeeShop";
+            message.Body = createEmailBody(user.email, user.password);
+            message.IsBodyHtml = true;
+            using (var smtp = new SmtpClient())
+            {
+                await smtp.SendMailAsync(message);
+                await Task.FromResult(0);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, response);
+
         }
     }
 }
