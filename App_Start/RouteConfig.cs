@@ -12,7 +12,14 @@ namespace coffee_shop
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+            // Define your custom routes here
+            routes.MapRoute(
+                name: "Login",
+                url: "login",
+                defaults: new { controller = "Account", action = "Login" } // Assuming "Account" is your controller name and "Login" is your action method
+            );
 
+            // default route
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

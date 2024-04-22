@@ -365,6 +365,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BillController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
@@ -427,6 +428,19 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\contact.js" />
+    <Content Include="Content\easing.min.js" />
+    <Content Include="Content\jqBootstrapValidation.min.js" />
+    <Content Include="Content\main.css" />
+    <Content Include="Content\main.js" />
+    <Content Include="Content\moment-timezone.min.js" />
+    <Content Include="Content\moment.min.js" />
+    <Content Include="Content\owl.carousel.min.css" />
+    <Content Include="Content\owl.carousel.min.js" />
+    <Content Include="Content\style.min.css" />
+    <Content Include="Content\tempusdominus-bootstrap-4.min.css" />
+    <Content Include="Content\tempusdominus-bootstrap-4.min.js" />
+    <Content Include="Content\waypoints.min.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Models\Model1.Context.tt">
@@ -489,10 +503,10 @@
     <Content Include="Content\Site.css" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
+    <None Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\login.cshtml" />
+    <Content Include="Views\Account\login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
