@@ -13,6 +13,11 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using System.Web.UI.WebControls;
 using System.Web.Helpers;
+using FromBodyAttribute = Microsoft.AspNetCore.Mvc.FromBodyAttribute;
+using RouteAttribute = System.Web.Http.RouteAttribute;
+using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
+using HttpGetAttribute = System.Web.Http.HttpGetAttribute;
+using ChangePassword = coffee_shop.Models.ChangePassword;
 
 namespace coffee_shop.Controllers
 {
@@ -47,20 +52,16 @@ namespace coffee_shop.Controllers
             }
         }
 
-        /*[System.Web.Http.HttpGet, System.Web.Http.Route("login")]
-        public ActionResult LoginPage()
-        {
-            return View("~/Views/Home/login.cshtml");
-        }*/
 
-
-        [System.Web.Http.HttpPost, System.Web.Http.Route("login")]
-        public HttpResponseMessage Login([System.Web.Http.FromBody] User user)
+        [HttpPost, Route("login")]
+        public HttpResponseMessage Login([FromBody] User user)
         {
+                Console.WriteLine("user is trying to login");
             try
             {
                 User userObj = db.Users
                     .Where(u => (u.email == user.email && u.password == user.password)).FirstOrDefault();
+                Console.WriteLine("user found");
                 if (userObj != null)
                 {
                     if (userObj.status == "true")
@@ -83,14 +84,14 @@ namespace coffee_shop.Controllers
         }
 
 
-        [System.Web.Http.HttpGet, System.Web.Http.Route("checkToken")]
+        [HttpGet, Route("checkToken")]
         [CustomAuthenticationFilter]
         public HttpResponseMessage CheckToken()
         {
             return Request.CreateResponse(HttpStatusCode.OK, new { message = "true" });
         }
 
-        [System.Web.Http.HttpGet, System.Web.Http.Route("getAllUser")]
+        [HttpGet, Route("getAllUser")]
         [CustomAuthenticationFilter]
         public HttpResponseMessage GetAllUser()
         {
@@ -115,7 +116,7 @@ namespace coffee_shop.Controllers
             }
         }
 
-        [System.Web.Http.HttpPost, System.Web.Http.Route("updateUserStatus")]
+        [HttpPost, Route("updateUserStatus")]
         [CustomAuthenticationFilter]
         public HttpResponseMessage UpdateUserStatus(User user)
         {
@@ -144,9 +145,9 @@ namespace coffee_shop.Controllers
             }
         }
 
-        [System.Web.Http.HttpPost, System.Web.Http.Route("changePassword")]
+        [HttpPost, Route("changePassword")]
         [CustomAuthenticationFilter]
-        public HttpResponseMessage ChangePassword(Models.ChangePassword changepassword)
+        public HttpResponseMessage ChangePassword(ChangePassword changepassword)
         {
             try
             {
@@ -194,8 +195,8 @@ namespace coffee_shop.Controllers
             }
         }
 
-        [System.Web.Http.HttpPost, System.Web.Http.Route("forgotPassword")]
-        public async Task<HttpResponseMessage> ForgotPassword([System.Web.Http.FromBody] User user)
+        [HttpPost, Route("forgotPassword")]
+        public async Task<HttpResponseMessage> ForgotPassword([FromBody] User user)
         {
             User userObj= db.Users.Where(u=> u.email==user.email).FirstOrDefault();
             response.message = "Password sent successfully to your email";
