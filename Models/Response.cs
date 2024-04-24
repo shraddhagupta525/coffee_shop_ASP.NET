@@ -7,6 +7,6 @@ namespace coffee_shop.Models
 {
     public class Response
     {
-        public string message {  get; set; }
+        public string message { get; set; }
     }
 }

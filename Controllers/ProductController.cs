@@ -38,7 +38,7 @@ namespace coffee_shop.Controllers
         }
 
         [HttpGet, Route("getAllProduct")]
-        [CustomAuthenticationFilter]
+        // [CustomAuthenticationFilter]
         public HttpResponseMessage GetAllProduct()
         {
             try

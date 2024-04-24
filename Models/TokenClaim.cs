@@ -7,8 +7,7 @@ namespace coffee_shop.Models
 {
     public class TokenClaim
     {
-        public string Email {  get; set; }
+        public string Email { get; set; }
         public string Role { get; set; }
     }
 }
-

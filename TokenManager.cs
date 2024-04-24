@@ -45,8 +45,7 @@ namespace coffee_shop
 
                 };
 
-                SecurityToken securityToken;
-                ClaimsPrincipal principal = tokenHandler.ValidateToken(token, parameters, out securityToken);
+                ClaimsPrincipal principal = tokenHandler.ValidateToken(token, parameters, out SecurityToken securityToken);
                 return principal;
 
                 

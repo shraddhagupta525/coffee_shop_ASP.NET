@@ -87,6 +87,7 @@
                     // logged in
                     //save token
                     const token = res.token;
+                    localStorage.setItem('authToken', token);
                     console.log(token);
                 }
             }).catch(e=>{

@@ -415,6 +415,8 @@
 
 </style>
 <script>
+
+    const token = localStorage.getItem('authToken');
     const navLinks = document.querySelectorAll('header nav ul li a');
     navLinks.forEach(link => {
         link.addEventListener('click', () => {
@@ -426,10 +428,15 @@
     });
 
     // fetch users from http://localhost:63946/api/product/getAllProduct and add in table of customers
-    fetch('http://localhost:63946/api/product/getAllProduct')
+    fetch('http://localhost:63946/api/product/getAllProduct',
+        body: {},
+        headers:{
+        'Authorization': `Bearer ${token}`
+        // Add other headers if needed, like 'Content-Type', 'Accept', etc.
+    })
         .then(response => response.json())
         .then(data => {
-            const table = document.querySelector('#admin-products table tbody');
+            const table = document.querySelector('section table tbody');
             table.innerHTML = '';
             data.forEach(product => {
                 const tr = document.createElement('tr');
@@ -447,7 +454,7 @@
     fetch('http://localhost:63946/api/bill/getBills')
         .then(response => response.json())
         .then(data => {
-            const table = document.querySelectorAll('#admin-orders table tbody')[1];
+            const table = document.querySelectorAll('section table tbody')[1];
             table.innerHTML = '';
             data.forEach(order => {
                 const tr = document.createElement('tr');
@@ -470,7 +477,7 @@
     fetch('http://localhost:63946/api/user/getAllUser')
         .then(response => response.json())
         .then(data => {
-            const table = document.querySelectorAll('#admin-users table tbody')[2];
+            const table = document.querySelectorAll('section table tbody')[2];
             table.innerHTML = '';
             data.forEach(customer => {
                 const tr = document.createElement('tr');
