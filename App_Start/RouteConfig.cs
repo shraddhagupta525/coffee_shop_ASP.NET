@@ -18,6 +18,11 @@ namespace coffee_shop
                 url: "login",
                 defaults: new { controller = "Account", action = "Login" } // Assuming "Account" is your controller name and "Login" is your action method
             );
+            routes.MapRoute(
+                name: "Admin",
+                url: "admin",
+                defaults: new { controller = "Account", action = "Admin" } // Assuming "Account" is your controller name and "Admin" is your action method
+            );
 
             // default route
             routes.MapRoute(

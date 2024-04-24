@@ -15,5 +15,11 @@ namespace coffee_shop.Controllers
 
             return View();
         }
+        public ActionResult Admin()
+        {
+            ViewBag.Title = "Admin Page";
+
+            return View();
+        }
     }
 }
