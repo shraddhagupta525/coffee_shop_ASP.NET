@@ -152,19 +152,19 @@ namespace coffee_shop.Controllers
 
         // get all bills
         [HttpGet, Route("getBills")]
-        [CustomAuthenticationFilter]
+        // [CustomAuthenticationFilter]
         public HttpResponseMessage GetBills()
         {
             try
             {
-                var token = Request.Headers.GetValues("authorization").First();
+               /* var token = Request.Headers.GetValues("authorization").First();
                 TokenClaim tokenClaim = TokenManager.ValidateToken(token);
                 if (tokenClaim.Role != "admin")
                 {
                     var userResult = db.Bills.Where(u => (u.createdBy == tokenClaim.Email))
                         .AsEnumerable().Reverse();
                     return Request.CreateResponse(HttpStatusCode.OK, userResult);
-                }
+                }*/
                 var adminResult = db.Bills.AsEnumerable().Reverse().ToList();
                 return Request.CreateResponse(HttpStatusCode.OK, adminResult);
             }

@@ -15,17 +15,17 @@ namespace coffee_shop.Controllers
         Response response = new Response();
 
         [HttpPost, Route("addNewProduct")]
-        [CustomAuthenticationFilter]
+        // [CustomAuthenticationFilter]
         public HttpResponseMessage AddNewProduct([FromBody] Product product)
         {
             try
             {
-                var token = Request.Headers.GetValues("authorization").First();
+                /*var token = Request.Headers.GetValues("authorization").First();
                 TokenClaim tokenClaim = TokenManager.ValidateToken(token);
                 if (tokenClaim.Role != "admin")
                 {
                     return Request.CreateResponse(HttpStatusCode.Unauthorized);
-                }
+                }*/
                 db.Products.Add(product);
                 db.SaveChanges();
                 response.message = "Product added Successfully";
@@ -128,18 +128,18 @@ namespace coffee_shop.Controllers
             }
         }
 
-        [HttpPost, Route("deleteProduct")]
-        [CustomAuthenticationFilter]
+        [HttpPost, Route("deleteProduct/{id}")]
+        //[CustomAuthenticationFilter]
         public HttpResponseMessage DeleteProduct(int id)
         {
             try
             {
-                var token = Request.Headers.GetValues("authorization").First();
+                /*var token = Request.Headers.GetValues("authorization").First();
                 TokenClaim tokenClaim = TokenManager.ValidateToken(token);
                 if (tokenClaim.Role != "admin")
                 {
                     return Request.CreateResponse(HttpStatusCode.Unauthorized);
-                }
+                }*/
                 Product productObj = db.Products.Find(id);
                 if (productObj == null)
                 {

@@ -92,17 +92,17 @@ namespace coffee_shop.Controllers
         }
 
         [HttpGet, Route("getAllUser")]
-        [CustomAuthenticationFilter]
+        // [CustomAuthenticationFilter]
         public HttpResponseMessage GetAllUser()
         {
             try
             {
-                var token = Request.Headers.GetValues("authorization").First();
-                TokenClaim tokenClaim = TokenManager.ValidateToken(token);
-                if(tokenClaim.Role != "admin") 
+                // var token = Request.Headers.GetValues("authorization").First();
+                // TokenClaim tokenClaim = TokenManager.ValidateToken(token);
+                /*if(tokenClaim.Role != "admin") 
                 {
                     return Request.CreateResponse(HttpStatusCode.Unauthorized);
-                }
+                }*/
                 var result = db.Users
                     .Select(u=> new { u.id, u.name, u.contactNumber, u.email, u.status, u.role })
                     .Where(x=> (x.role == "user"))
